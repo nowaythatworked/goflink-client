@@ -40,11 +40,11 @@ import { FlinkClient } from "./FlinkClient"
 ```
 
 ## Documentation
-For Documentation I can only provide an OpenAPI schema. You can check it out [here](todo)
+For Documentation I can only provide an OpenAPI schema. You can check it out by going to [Swagger UI](https://petstore.swagger.io/) and putting in the link to the [schema.yaml](https://raw.githubusercontent.com/nowaythatworked/goflink-client/main/src/schema.yaml)
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](issues).
+Contributions, issues and feature requests are welcome!<br />Especially extending the OpenAPI Schema.
 
 ## 📝 License
 
