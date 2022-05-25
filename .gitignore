@@ -1,0 +1,15 @@
+# Logs
+yarn-debug.log*
+yarn-error.log*
+
+# npm library files
+lib/
+
+# Dependency directories
+node_modules/
+
+# dotenv environment variables file
+.env
+
+# generated files
+**gen**

@@ -1,0 +1,205 @@
+openapi: 3.0.0
+info:
+  title: Flink Client
+  description: Inoffical documentation of goflink.com API
+  contact: {}
+  version: '1.0.0'
+
+servers:
+  - url: https://consumer-api.goflink.com/v1
+
+paths:
+  /verify/send-otp:
+    post:
+      summary: Send One-Time-Password to phone number
+      operationId: sendOTP
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendOTPRequest"
+        required: true
+      responses:
+        200:
+          description: OK; Order has been scheduled correctly
+        400:
+          description: Bad Request; Validation failed; missing parameters, wrong format, price mismatch, wrong project id, non-supported currency
+        401:
+          description: Unauthorized; Authentication failed
+  /verify:
+    post:
+      summary: Verify One-Time-Password
+      operationId: verify
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendVerifyRequest"
+        required: true
+      responses:
+        200:
+          description: OK; Order has been scheduled correctly
+        400:
+          description: Bad Request; Validation failed; missing parameters, wrong format, price mismatch, wrong project id, non-supported currency
+        401:
+          description: Unauthorized; Authentication failed
+  /me/sign-up:
+    post:
+      summary: Sign up new user
+      operationId: signUp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpRequest"
+      responses:
+        200:
+          description: Successfully created new account
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SignUpResponse" }
+        400:
+          description: Bad Request; Validation failed; missing parameters, wrong format, price mismatch, wrong project id, non-supported currency
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+  /me/status:
+    get:
+      summary: Get verifcation status of user
+      operationId: getStatus
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Received information
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StatusResponse" }
+  /relyingparty/verifyPassword?key=AIzaSyBV8_gj93sKn4u_VNjCNPA3_3Rb-rUVy9c:
+    servers:
+      - url: https://www.googleapis.com/identitytoolkit/v3
+    post:
+      summary: Get JWT token from google, required in all other authenticated requests
+      operationId: getGoogleJWT
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/GetGoogleJWTRequest" }
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GetGoogleJWTResponse" }
+        400:
+          description: Bad Request; Does the user exist?
+components:
+  schemas:
+    SendOTPRequest:
+      title: SendOTPRequest
+      required:
+        - "country_code"
+        - "mobile_number"
+      type: object
+      properties:
+        country_code:
+          type: string
+          description: Countrycode of phonenumber
+          example: "+49"
+        mobile_number:
+          type: string
+          description: Phonenumber without countryCode
+    SendVerifyRequest:
+      title: SendVerifyRequest
+      type: object
+      required:
+        - "code"
+      allOf:
+        - $ref: "#/components/schemas/SendOTPRequest"
+      properties:
+        code:
+          type: string
+          description: OTP from SMS
+          maxLength: 5
+          example: "54108"
+    SignUpRequest:
+      title: SignUpRequest
+      type: object
+      required:
+        - "email"
+        - "first_name"
+        - "last_name"
+        - "password"
+      properties:
+        email:
+          type: string
+          description: E-Mail address of user to create
+        first_name:
+          type: string
+          description: First name of user to create
+        last_name:
+          type: string
+          description: Last name of user to create
+        password:
+          type: string
+          description: password of user to create
+    SignUpResponse:
+      title: SignUpResponse
+      type: object
+      required:
+        - "access_token"
+      properties:
+        access_token:
+          type: string
+          description: JWT used to authenticate with Firebase endpoint
+    StatusResponse:
+      title: StatusResponse
+      type: object
+      required:
+        - "is_sms_verified"
+      properties:
+        is_sms_verified:
+          type: boolean
+          description: Is user SMS verified
+    GetGoogleJWTRequest:
+      title: GetGoogleJWTRequest
+      type: object
+      properties:
+        email:
+          type: string
+          description: E-Mail address of user to create
+        password:
+          type: string
+          description: password of user to create
+        returnSecureToken:
+          type: boolean
+          description: Must be set to true to get JWT token
+          default: true
+    GetGoogleJWTResponse:
+      title: GetGoogleJWTResponse
+      type: object
+      properties:
+        idToken:
+          type: string
+          description: JWT token to use for authentication in other requests
+        refreshToken:
+          type: string
+          description: JWT refresh token, used to get new JWT token
+    ErrorResponse:
+      title: ErrorResponse
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
