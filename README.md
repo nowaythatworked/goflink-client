@@ -9,7 +9,7 @@ This is a TypeScript SDK for communicating with Flink API. The API is not offica
 
 ## Heads up
 
-You need a unique phone number for each account you want to create. For automation you can take a look at https://sms-activate.org/
+You need a unique phone number for each account you want to create.
 
 ## Installation
 
