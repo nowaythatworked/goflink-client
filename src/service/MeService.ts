@@ -4,7 +4,7 @@ import { MeBaseService } from "../gen/service/me-base-service";
 import { GoogleService } from "./GoogleService";
 
 export class MeService extends MeBaseService {
-    async createAccount(accountData: ISignUpRequest) {
+    async createAccount(accountData: ISignUpRequest): Promise<string | undefined> {
         const signUpResponse = await this.signUp(accountData)
         if (!signUpResponse) return
         
