@@ -4,6 +4,8 @@
 
 export interface ISendVerifyRequest {
 
+    code: number;
+
     country_code: string;
 
     mobile_number: string;

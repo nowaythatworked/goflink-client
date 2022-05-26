@@ -7,7 +7,7 @@ const EMPTY_STRING = '';
 export const getQueryParameters = (parameters: Array<IQueryParam> = []): string => {
     const keyValue: Array<string> = [];
     for (const parameter of parameters) {
-        if (parameter.value) {
+        if (!!parameter.value) {
             if (Array.isArray(parameter.value)) {
                 parameter.value.forEach(v => keyValue.push(getQueryParameter(parameter.name, v)));
             } else {
